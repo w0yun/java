@@ -1,0 +1,76 @@
+from lxml import etree
+
+words = "https://api.shodan.io/shodan/host/ key="
+
+url = ("https://github.com/search?p=1&q=%s&type=Code" % words)
+
+r = session.get(url, headers=headers)
+
+html = etree.HTML(r.text)
+
+block = html.xpath("//div[@class='code-list-item col-12 py-4 code-list-item-public ']")
+
+print("[+] Info: get item: %i" % len(block))
+
+codes = html.xpath("//div[@class='code-list-item col-12 py-4 code-list-item-public ']/div[@class='file-box blob-wrapper']/table[@class='highlight']/tr/td[@class='blob-code blob-code-inner']")
+
+nums = html.xpath("//div[@class='code-list-item col-12 py-4 code-list-item-public ']/div[@class='file-box blob-wrapper']/table[@class='highlight']/tr/td[@class='blob-num']/a")
+
+if len(codes) == len(nums):
+
+    print("[+] Info: start get data, waiting")
+
+    lines = []
+
+    strs = None
+
+    for i in range(len(nums)):
+
+        #print(etree.tostring(codes[i], method='text'))
+
+    try:
+
+        text = etree.tostring(codes[i], method='text')
+
+    except UnicodeEncodeError:
+
+        print("[+] UnicodeEncodeError of a result, jump...")
+
+        continue
+
+    if nums[i].text == '1':
+
+        if strs is not None:
+
+            lines.append(strs)
+
+            strs = text
+
+        else:
+
+            strs = "%s \\n %s" % (strs, text)
+
+            lines.append(strs)
+
+    else:
+
+        print("[+] Error: wrong number get for codes lines, exit")
+
+print("info : %s" % lines)
+
+print("total num of info get: %i" % len(lines))
+
+#此为中央结算公司渗透测试保密项目，本记录为协作攻击记录文档，请团队内部共享后立即删除
+#新人可以去公网资源库去下载各类工具
+-. 子域名挖掘未获取敏感域名
+-. web敏感目录获取有价值信息
+  北京job管理员伪装页面：
+  北京tomcat管理页面
+  上海job管理员伪造页面
+  work管理页面
+  
+-. 主机层面覆盖面过广，目前未获取有价值信息
+
+-. 对web敏感路径进行挖掘
+
+-. 下一阶段信息泄露get-shell获取权限
